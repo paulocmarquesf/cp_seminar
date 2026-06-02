@@ -45,7 +45,7 @@ trn <- db[ind == 1, ]
 cal <- db[ind == 2, ]
 tst <- db[ind == 3, ]
 
-alpha <- 1 - 0.9
+alpha <- 0.1
 
 ### Linear regression - standard score
 
@@ -107,7 +107,10 @@ plot_intervals(tst$median_house_value, y_hat_tst, lower, upper,
 rf <- ranger(median_house_value ~ ., data = trn, quantreg = TRUE, num.trees = 10^3)
 
 alpha_low <- alpha / 2
-alpha_high <- 1 - alpha /2
+alpha_high <- 1 - alpha / 2
+
+# alpha_low <- 0.1371843
+# alpha_high <- 0.9312389
 
 q_hat_cal <- predict(rf, data = cal, type = "quantiles", quantiles = c(alpha_low, alpha_high))$predictions
 E <- pmax(q_hat_cal[, 1] - cal$median_house_value, cal$median_house_value - q_hat_cal[, 2])
